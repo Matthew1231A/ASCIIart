@@ -3,7 +3,7 @@ from PIL import Image
 
 POST_PROCESS_NAME_APPEND = "_ASCII_modified"
 LUMINOSITY_COEFF_ARRAY = [0.21, 0.72, 0.07]
-BRIGHTNESS_CHAR_STRING = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"[::-1]
+BRIGHTNESS_CHAR_STRING = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 BRIGHTNESS_CHAR_STRING_LENGTH = len(BRIGHTNESS_CHAR_STRING)
 OUTPUT_FILE_TYPE = ".txt"
 BASE_HEIGHT = 120
@@ -32,13 +32,13 @@ def compute_dot(v1: list, v2: list) -> float:
 
 
 def normalize_image_dimensions(width: int, height: int) -> tuple:
-    #Determine scale from current height to 100 
-    #e.g. 300 becomes 100 with a scale of 3
+    # Determine scale from current height to 100
+    # e.g. 300 becomes 100 with a scale of 3
     normalize_scale = float(height)/BASE_HEIGHT
 
-    #Set height to be the BASE_HEIGHT
+    # Set height to be the BASE_HEIGHT
     height = BASE_HEIGHT
-    #Scale the width by the ratio calculated above
+    # Scale the width by the ratio calculated above
     width = int(float(width)/normalize_scale)
 
     return (width, height)
@@ -61,8 +61,8 @@ if __name__ == "__main__":
                 print(
                     f"Loaded {infile} with size {image_width}x{image_height}")
 
-                
-                resized = image.resize(normalize_image_dimensions(image_width, image_height))
+                new_dimensions = normalize_image_dimensions(image_width, image_height)
+                resized = image.resize(new_dimensions)
                 image_width, image_height = resized.size
 
                 print(
@@ -79,7 +79,7 @@ if __name__ == "__main__":
                     buffer = ""
                     for x in range(image_width):
                         pixel = pixels[x, y]
-                        luminosity = 255 - compute_dot(pixel, LUMINOSITY_COEFF_ARRAY)
+                        luminosity = compute_dot(pixel, LUMINOSITY_COEFF_ARRAY)
 
                         # Normalize brightness model then map across string
                         brightness_string_index = int(
